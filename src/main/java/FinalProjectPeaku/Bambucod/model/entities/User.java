@@ -34,8 +34,9 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.username;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

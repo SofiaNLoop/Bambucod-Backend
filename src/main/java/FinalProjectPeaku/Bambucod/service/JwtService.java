@@ -26,12 +26,12 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails user){
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
+        return Jwts.builder().
+                claims(extraClaims)
+                .subject(user.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getKey())
                 .compact();
     }
 
@@ -51,11 +51,11 @@ public class JwtService {
 
     private Claims getAllClaims (String token){
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getKey())
+                .parser()
+                .verifyWith((SecretKey) getKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver){

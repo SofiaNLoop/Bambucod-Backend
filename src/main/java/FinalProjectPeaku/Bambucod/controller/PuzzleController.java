@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PuzzleController {
 
-    @PostMapping("/demo")
+    @PostMapping(value= "demo")
     public String welcome (){
         return "Welcome!!!";
     }

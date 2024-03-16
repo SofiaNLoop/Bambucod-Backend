@@ -1,6 +1,7 @@
 package FinalProjectPeaku.Bambucod.config.jwt;
 
 import FinalProjectPeaku.Bambucod.service.JwtService;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -28,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
         final String username;
-
+        System.out.println("este es mi token:"+token);
         if(token == null) {
             filterChain.doFilter(request, response);
             return;
@@ -36,8 +39,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         username = jwtService.getUsernameFromToken(token);
 
-        if ( username!=null && SecurityContextHolder.getContext().getAuthentication() == null){
 
+        if ( username!=null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if(jwtService.isTokenValid(token, userDetails)){
@@ -51,6 +54,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+        } else {
+            System.out.println("user name nulo?"+username);
+            System.out.println("contexto nulo?"+ SecurityContextHolder.getContext().getAuthentication());
         }
 
         filterChain.doFilter(request, response);
@@ -58,9 +64,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request){
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String authHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
+        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
         return null;
