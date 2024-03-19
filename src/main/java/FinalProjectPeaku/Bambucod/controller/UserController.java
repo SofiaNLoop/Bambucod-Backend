@@ -20,15 +20,9 @@ public class UserController {
     private final UserService userService;
 
 
-//
-//    @GetMapping
-//    public List<User> getAllStudents(){
-//        return this.userService.getUsers();
-//    }
-
-    @GetMapping(value = "/list-users")
+    @GetMapping(value = "list")
     public List<User> getAllUsers(){
-        return userService.getUsers();
+        return userService.getAllUsers();
     }
 
 

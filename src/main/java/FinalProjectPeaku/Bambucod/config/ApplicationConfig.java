@@ -1,7 +1,9 @@
 package FinalProjectPeaku.Bambucod.config;
 
 import FinalProjectPeaku.Bambucod.exceptions.NullException;
+import FinalProjectPeaku.Bambucod.model.entities.User;
 import FinalProjectPeaku.Bambucod.repository.UserRepository;
+import FinalProjectPeaku.Bambucod.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
@@ -44,11 +46,8 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(()-> new NullException("user.not.found", HttpStatus.BAD_REQUEST));
+        return userService::getByUsername;
     }
-
-
 
 
 }

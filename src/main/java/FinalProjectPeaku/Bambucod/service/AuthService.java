@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 
 
 @Service
@@ -26,27 +27,24 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     public String login(LoginRequest request) {
-        if (request.getUsername() == null || request.getPassword() == null){
-            throw new NullException("null.fields", HttpStatus.BAD_REQUEST);
-        } else {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    ));
+        validateNullUsernameAndPassword(request.getUsername(), request.getPassword());
 
-            UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
 
-            return jwtService.getToken(user);
-        }
+        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 
+        return jwtService.getToken(user);
     }
 
     public String register(RegisterRequest request) {
-        if (request.getUsername() == null || request.getPassword() == null){
-            throw new NullException("null.fields", HttpStatus.BAD_REQUEST);
-        } else{
-            User user = User.builder()
+        validateNullUsernameAndPassword(request.getUsername(), request.getPassword());
+
+        User user = User.builder()
                     .username(request.getUsername())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .name(request.getName())
@@ -54,9 +52,15 @@ public class AuthService {
                     .role(Role.USER)
                     .build();
             userRepository.save(user);
-            return "¡Usuario creado correctamente!";
-        }
 
+        return "¡Usuario creado correctamente!";
+    }
+
+    public void validateNullUsernameAndPassword(String username, String password){
+        Optional.ofNullable(username)
+                .orElseThrow(() -> new NullException("null.fields", HttpStatus.BAD_REQUEST));
+        Optional.ofNullable(password)
+                .orElseThrow(() -> new NullException("null.fields", HttpStatus.BAD_REQUEST));
     }
 
 }
