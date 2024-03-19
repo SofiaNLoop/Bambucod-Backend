@@ -1,5 +1,6 @@
 package FinalProjectPeaku.Bambucod.model.DTO;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
+
     private String username;
+
     private String password;
 }

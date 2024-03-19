@@ -1,9 +1,11 @@
 package FinalProjectPeaku.Bambucod.config;
 
+import FinalProjectPeaku.Bambucod.exceptions.NullException;
 import FinalProjectPeaku.Bambucod.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,7 +45,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailService() {
         return username -> userRepository.findByUsername(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User not fournd"));
+                .orElseThrow(()-> new NullException("user.not.found", HttpStatus.BAD_REQUEST));
     }
 
 

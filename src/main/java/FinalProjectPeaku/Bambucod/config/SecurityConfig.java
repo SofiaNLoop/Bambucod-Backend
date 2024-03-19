@@ -1,6 +1,5 @@
 package FinalProjectPeaku.Bambucod.config;
 
-import FinalProjectPeaku.Bambucod.config.jwt.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

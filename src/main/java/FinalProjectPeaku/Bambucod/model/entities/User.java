@@ -23,20 +23,17 @@ public class User implements UserDetails {
     private Integer id;
     private String name;
     private String lastName;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
     private Role role;
+    private String score;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
 
     @Override
     public boolean isAccountNonExpired() {

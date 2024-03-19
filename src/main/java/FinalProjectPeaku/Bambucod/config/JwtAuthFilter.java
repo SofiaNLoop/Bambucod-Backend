@@ -1,4 +1,4 @@
-package FinalProjectPeaku.Bambucod.config.jwt;
+package FinalProjectPeaku.Bambucod.config;
 
 import FinalProjectPeaku.Bambucod.service.JwtService;
 
@@ -31,7 +31,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
         final String username;
-        System.out.println("este es mi token:"+token);
         if(token == null) {
             filterChain.doFilter(request, response);
             return;
@@ -54,9 +53,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-        } else {
-            System.out.println("user name nulo?"+username);
-            System.out.println("contexto nulo?"+ SecurityContextHolder.getContext().getAuthentication());
         }
 
         filterChain.doFilter(request, response);
