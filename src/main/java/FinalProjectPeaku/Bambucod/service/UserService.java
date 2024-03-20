@@ -1,6 +1,6 @@
 package FinalProjectPeaku.Bambucod.service;
 
-import FinalProjectPeaku.Bambucod.exceptions.NullException;
+import FinalProjectPeaku.Bambucod.exceptions.MessageException;
 import FinalProjectPeaku.Bambucod.model.entities.User;
 import FinalProjectPeaku.Bambucod.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,11 @@ public class UserService {
         if( userRepository.findByUsername(username).isPresent() ){
             return userRepository.findByUsername(username).get();
         } else {
-            throw new NullException("user.not.found", HttpStatus.NOT_FOUND);
+            throw new MessageException("user.not.found", HttpStatus.NOT_FOUND);
         }
+    }
+
+    public User createUpdateUser(User user){
+        return userRepository.save(user);
     }
 }

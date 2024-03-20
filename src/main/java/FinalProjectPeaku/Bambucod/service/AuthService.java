@@ -1,12 +1,10 @@
 package FinalProjectPeaku.Bambucod.service;
 
-import FinalProjectPeaku.Bambucod.exceptions.NullException;
-import FinalProjectPeaku.Bambucod.model.DTO.AuthResponse;
+import FinalProjectPeaku.Bambucod.exceptions.MessageException;
 import FinalProjectPeaku.Bambucod.model.DTO.LoginRequest;
 import FinalProjectPeaku.Bambucod.model.DTO.RegisterRequest;
 import FinalProjectPeaku.Bambucod.model.entities.Role;
 import FinalProjectPeaku.Bambucod.model.entities.User;
-import FinalProjectPeaku.Bambucod.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,12 +20,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     public String login(LoginRequest request) {
         validateNullUsernameAndPassword(request.getUsername(), request.getPassword());
+
+        UserDetails user = userService.getByUsername(request.getUsername());
+
+        validatePassword(request.getPassword(), user.getPassword());
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -35,8 +37,6 @@ public class AuthService {
                         request.getPassword()
                 )
         );
-
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 
         return jwtService.getToken(user);
     }
@@ -51,16 +51,24 @@ public class AuthService {
                     .lastName(request.getLastName())
                     .role(Role.USER)
                     .build();
-            userRepository.save(user);
+            userService.createUpdateUser(user);
 
         return "¡Usuario creado correctamente!";
     }
 
     public void validateNullUsernameAndPassword(String username, String password){
         Optional.ofNullable(username)
-                .orElseThrow(() -> new NullException("null.fields", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new MessageException("null.fields", HttpStatus.BAD_REQUEST));
         Optional.ofNullable(password)
-                .orElseThrow(() -> new NullException("null.fields", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new MessageException("null.fields", HttpStatus.BAD_REQUEST));
     }
+
+    public void validatePassword(String passwordReq, String passwordDB){
+        boolean isCorrectPassword = passwordEncoder.matches(passwordReq, passwordDB);
+        if(!isCorrectPassword){
+            throw new MessageException("incorrect.password", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
