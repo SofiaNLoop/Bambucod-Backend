@@ -18,12 +18,12 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(value = "/api/v1/auth", produces = "application/json;charset=UTF-8")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
-    @PostMapping("/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
         return ResponseEntity.ok(
                 AuthResponse.builder()
@@ -32,7 +32,7 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(
                 AuthResponse.builder()
