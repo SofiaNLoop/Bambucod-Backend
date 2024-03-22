@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-
 
 @RestController
-@RequestMapping(value = "/api/v1/auth", produces = "application/json;charset=UTF-8")
+@RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

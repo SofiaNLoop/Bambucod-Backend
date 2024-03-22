@@ -22,9 +22,6 @@ public class ControllerExceptionAdvisor {
 
     @ExceptionHandler(MessageException.class)
     public ResponseEntity<AuthResponse> handlerException(MessageException messageException){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
         String errorMessage = messageSource.getMessage(
                 messageException.getMessage(), null, Locale.getDefault()
         );
@@ -33,6 +30,12 @@ public class ControllerExceptionAdvisor {
                 .message(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(authResponse, headers, messageException.getHttpStatus());
+        return ResponseEntity.status(messageException.getHttpStatus())
+                .body(
+                        AuthResponse.builder()
+                                .message(errorMessage)
+                                .build()
+
+                );
     }
 }
