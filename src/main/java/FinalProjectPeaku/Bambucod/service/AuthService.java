@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     public String login(LoginRequest request) {
-        validateNullUsernameAndPassword(request.getUsername(), request.getPassword());
+        validateEmptyUsernameAndPassword(request.getUsername(), request.getPassword());
 
         UserDetails user = userService.getByUsername(request.getUsername());
 
@@ -42,7 +43,7 @@ public class AuthService {
     }
 
     public String register(RegisterRequest request) {
-        validateNullUsernameAndPassword(request.getUsername(), request.getPassword());
+        validateEmptyUsernameAndPassword(request.getUsername(), request.getPassword());
 
         User user = User.builder()
                     .username(request.getUsername())
@@ -56,11 +57,10 @@ public class AuthService {
         return "¡Usuario creado correctamente!";
     }
 
-    public void validateNullUsernameAndPassword(String username, String password){
-        Optional.ofNullable(username)
-                .orElseThrow(() -> new MessageException("null.fields", HttpStatus.BAD_REQUEST));
-        Optional.ofNullable(password)
-                .orElseThrow(() -> new MessageException("null.fields", HttpStatus.BAD_REQUEST));
+    public void validateEmptyUsernameAndPassword(String username, String password){
+        if(!StringUtils.hasText(username) || !StringUtils.hasText(password)){
+            throw new MessageException("empty.fields", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void validatePassword(String passwordReq, String passwordDB){
