@@ -1,6 +1,7 @@
 package FinalProjectPeaku.Bambucod.service;
 
 import FinalProjectPeaku.Bambucod.exceptions.MessageException;
+import FinalProjectPeaku.Bambucod.model.DTO.ScoreUpdateRequest;
 import FinalProjectPeaku.Bambucod.model.entities.User;
 import FinalProjectPeaku.Bambucod.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,14 @@ public class UserService {
 
     public User createUpdateUser(User user){
         return userRepository.save(user);
+    }
+
+    public String updateScore(Integer id, ScoreUpdateRequest scoreUpdateReq) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.NOT_FOUND));
+
+        user.setScore(scoreUpdateReq.getScore());
+        userRepository.save(user);
+        return user.getScore();
     }
 }

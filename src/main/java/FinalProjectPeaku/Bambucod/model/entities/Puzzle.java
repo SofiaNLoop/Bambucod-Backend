@@ -13,8 +13,7 @@ import lombok.*;
 public class Puzzle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
     private String title;
     private String difficulty;
     private String category;
