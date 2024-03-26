@@ -11,7 +11,7 @@ COPY . /app
 RUN gradle clean build
 
 # Crear una nueva imagen basada en OpenJDK 8
-FROM openjdk:21-jre-slim-buster
+FROM openjdk:21
 
 # Exponer el puerto que utilizará la aplicación
 EXPOSE 8080
