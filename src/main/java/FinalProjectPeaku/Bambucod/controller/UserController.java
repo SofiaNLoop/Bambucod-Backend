@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -22,11 +23,16 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-
+    @GetMapping(value = "get-score/{username}")
+    public Integer getScore (@PathVariable String username){
+        return userService.getScore(username);
+    }
 
     @PatchMapping(value = "set-score/{username}")
     public Integer setScoreUser (@PathVariable String username, @RequestBody ScoreUpdateRequest scoreUpdateReq) {
-        return userService.updateScore(username, scoreUpdateReq);
+        Integer intValue = userService.updateScore(username, scoreUpdateReq);
+        return Objects.requireNonNullElse(intValue, 0);
+
     }
 
 

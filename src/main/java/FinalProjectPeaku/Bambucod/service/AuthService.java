@@ -51,6 +51,7 @@ public class AuthService {
                     .name(request.getName())
                     .lastName(request.getLastName())
                     .role(Role.USER)
+                    .score(0)
                     .build();
             userService.createUpdateUser(user);
 

@@ -36,10 +36,15 @@ public class UserService {
         }
     }
 
+    public Integer getScore(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.NOT_FOUND));
+        return user.getScore();
+    }
 
     public Integer updateScore(String username, ScoreUpdateRequest scoreUpdateReq) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.OK));
+                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.NOT_FOUND));
 
         if(user.getScore() == null || user.getScore() == 0 ){
             user.setScore(scoreUpdateReq.getScore());
