@@ -70,5 +70,8 @@ public class AuthService {
         }
     }
 
+    public void validateEmailDuplicated(String emailReq, String emailDB){
+
+    }
 
 }

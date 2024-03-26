@@ -23,12 +23,12 @@ public class User implements UserDetails {
     private Integer id;
     private String name;
     private String lastName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
     private String password;
     private Role role;
-    private String score;
+    private Integer score;
 
 
     @Override

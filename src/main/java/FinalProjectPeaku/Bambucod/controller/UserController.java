@@ -22,9 +22,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PatchMapping(value = "set-score/{id}")
-    public String setScoreUser (@PathVariable Integer id, @RequestBody ScoreUpdateRequest scoreUpdateReq) {
-        return userService.updateScore(id, scoreUpdateReq);
+
+
+    @PatchMapping(value = "set-score/{username}")
+    public Integer setScoreUser (@PathVariable String username, @RequestBody ScoreUpdateRequest scoreUpdateReq) {
+        return userService.updateScore(username, scoreUpdateReq);
     }
 
 

@@ -3,6 +3,7 @@ package FinalProjectPeaku.Bambucod.controller;
 import FinalProjectPeaku.Bambucod.model.DTO.AuthResponse;
 import FinalProjectPeaku.Bambucod.model.DTO.LoginRequest;
 import FinalProjectPeaku.Bambucod.model.DTO.RegisterRequest;
+import FinalProjectPeaku.Bambucod.model.DTO.RegisterResponse;
 import FinalProjectPeaku.Bambucod.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,14 +25,15 @@ public class AuthController {
         return ResponseEntity.ok(
                 AuthResponse.builder()
                         .message(authService.login(request))
+                        .email(request.getUsername())
                         .build()
         );
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(
-                AuthResponse.builder()
+                RegisterResponse.builder()
                         .message(authService.register(request))
                         .build()
         );

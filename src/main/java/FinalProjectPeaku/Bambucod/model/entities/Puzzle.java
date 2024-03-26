@@ -17,5 +17,6 @@ public class Puzzle {
     private String title;
     private String difficulty;
     private String category;
+    private String hint;
 
 }

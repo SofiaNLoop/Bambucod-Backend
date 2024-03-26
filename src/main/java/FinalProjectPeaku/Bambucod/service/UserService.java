@@ -29,15 +29,25 @@ public class UserService {
     }
 
     public User createUpdateUser(User user){
-        return userRepository.save(user);
+        if( userRepository.findByUsername(user.getUsername()).isPresent() ){
+            throw new MessageException("username.duplicated", HttpStatus.NOT_FOUND);
+        } else {
+            return userRepository.save(user);
+        }
     }
 
-    public String updateScore(Integer id, ScoreUpdateRequest scoreUpdateReq) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.NOT_FOUND));
 
-        user.setScore(scoreUpdateReq.getScore());
+    public Integer updateScore(String username, ScoreUpdateRequest scoreUpdateReq) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new MessageException("user.not.found", HttpStatus.OK));
+
+        if(user.getScore() == null || user.getScore() == 0 ){
+            user.setScore(scoreUpdateReq.getScore());
+        } else {
+            user.setScore(user.getScore()+scoreUpdateReq.getScore());
+        }
         userRepository.save(user);
         return user.getScore();
+
     }
 }
