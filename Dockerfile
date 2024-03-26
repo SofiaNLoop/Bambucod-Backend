@@ -1,23 +1,8 @@
-# Usar una imagen base con JDK 8 y Gradle
-FROM gradle:8.6.0-jdk21 AS build
+FROM gradle:8.6-jdk21 AS build
+COPY . .
+RUN gradle build -x test
 
-# Establecer un directorio de trabajo
-WORKDIR /app
-
-# Copiar archivos de tu proyecto al directorio de trabajo
-COPY . /app
-
-# Ejecutar Gradle para construir el proyecto
-RUN gradle clean build
-
-# Crear una nueva imagen basada en OpenJDK 8
-FROM openjdk:21
-
-# Exponer el puerto que utilizará la aplicación
+FROM openjdk:21-jdk-slim
+COPY --from=build /target/Bambucod-0.0.1-SNAPSHOT.jar Bambucod.jar
 EXPOSE 8080
-
-# Copiar el archivo JAR construido desde la etapa anterior
-COPY --from=build /app/build/libs/Bambucod-0.0.1-SNAPSHOT.jar /app/Bambucod-0.0.1-SNAPSHOT.jar
-
-# Establecer el punto de entrada para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app/Bambucod-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "Bambucod.jar"]
